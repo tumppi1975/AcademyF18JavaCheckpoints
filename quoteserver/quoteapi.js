@@ -25,6 +25,10 @@ router.route('/')
     })
     .post(function(req, res){
         console.log(req.body);
+        if (!req.body.quotetext) {
+            res.status(400).send({error: 'empty quotetext in received JSON document'});
+            return;
+        }
         db.createquote(req.body, function(newid) {
             res.status(201).set("Location", '/api/quote/'+newid).send();
         });

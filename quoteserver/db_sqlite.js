@@ -133,7 +133,12 @@ function createquote(quote, callback) {
     db.run("INSERT INTO `quotes` (`author`, `quotetext`) VALUES (?,?)",
         [quote.author, quote.quotetext],
         function (err) {
-            callback(this.lastID);
+            const createdid = this.lastID;
+            db.run("INSERT INTO `history` (`quoteid`, `author`, `quotetext`, `time`) VALUES (?,?,?,?)",
+                [createdid, quote.author, quote.quotetext, new Date().getTime()],
+                function (err) {
+                    callback(createdid);
+                });
         });
 }
 
